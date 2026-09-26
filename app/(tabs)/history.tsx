@@ -1,52 +1,122 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { COLORS } from '@/constants/colors';
-import { STUDENT_ID } from '@/constants/student';
+import { useAuth } from '@/lib/auth';
+import { getProfile } from '@/lib/profiles';
 import { getAttendanceHistory, type AttendanceRecord } from '@/lib/database';
+import { getTeacherEventAttendance } from '@/lib/attendance';
 
 export default function HistoryScreen() {
-  const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-
-  const loadHistory = useCallback(() => {
-    getAttendanceHistory(STUDENT_ID).then((rows) => {
-      setRecords(rows);
-      setLoading(false);
-    });
-  }, []);
+  const [profile, setProfile] = useState<any>(null);
+  const [teacherEvents, setTeacherEvents] = useState<any[]>([]);
+  const [studentRecords, setStudentRecords] = useState<AttendanceRecord[]>([]);
 
   useFocusEffect(
     useCallback(() => {
-      loadHistory();
-    }, [loadHistory])
+      loadData();
+    }, [])
   );
+
+  const loadData = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const p = await getProfile(user.id);
+    setProfile(p);
+
+    const currentRole = p?.role ?? 'student';
+
+    if (currentRole === 'teacher') {
+      const events = await getTeacherEventAttendance(user.id);
+      setTeacherEvents(events);
+      setStudentRecords([]);
+    } else {
+      const records = await getAttendanceHistory(user.id ?? '');
+      setStudentRecords(records);
+      setTeacherEvents([]);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.subtitle}>Loading records...</Text>
+      </View>
+    );
+  }
+
+  if (profile?.role === 'teacher') {
+    if (teacherEvents.length === 0) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title}>Attendance History</Text>
+          <Text style={styles.subtitle}>No events found.</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Attendance History</Text>
+        <FlatList
+          data={teacherEvents}
+          keyExtractor={(item: any) => item.eventId}
+          contentContainerStyle={styles.list}
+          renderItem={((info: any) => {
+            const scannedItem = info.item as any;
+            return (
+              <View style={styles.card}>
+                <Text style={styles.eventTitle}>{scannedItem.title}</Text>
+                <Text style={styles.eventMeta}>Code: {scannedItem.eventCode}</Text>
+                <Text style={styles.eventMeta}>Attendees: {scannedItem.attendeeCount}</Text>
+                <Text style={styles.eventMeta}>Start: {scannedItem.startTime || '—'}</Text>
+                <Text style={styles.eventMeta}>End: {scannedItem.endTime || '—'}</Text>
+              </View>
+            );
+          })}
+        />
+      </View>
+    );
+  }
+
+  if (studentRecords.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Attendance History</Text>
+        <Text style={styles.subtitle}>
+          No records yet. Scan a QR code to register your attendance.
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Attendance History</Text>
-
-      {loading ? (
-        <Text style={styles.subtitle}>Loading records...</Text>
-      ) : records.length === 0 ? (
-        <Text style={styles.subtitle}>
-          No records yet. Scan a QR code to register your attendance.
-        </Text>
-      ) : (
-        <FlatList
-          data={records}
-          keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text style={styles.eventTitle}>{item.eventTitle}</Text>
-              <Text style={styles.eventMeta}>{item.eventId}</Text>
-              <Text style={styles.eventMeta}>{formatDate(item.scannedAt)}</Text>
-            </View>
-          )}
-        />
-      )}
+      <FlatList
+        data={studentRecords}
+        keyExtractor={(item: AttendanceRecord) => String(item.id)}
+        contentContainerStyle={styles.list}
+        renderItem={(({ item: record }) => (
+          <View style={styles.card}>
+            <Text style={styles.eventTitle}>{record.eventTitle}</Text>
+            <Text style={styles.eventMeta}>{record.eventId}</Text>
+            <Text style={styles.eventMeta}>{formatDate(record.scannedAt)}</Text>
+          </View>
+        ))}
+      />
     </View>
   );
 }

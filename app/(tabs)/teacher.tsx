@@ -213,6 +213,7 @@ export default function TeacherScreen() {
           <Text style={styles.payloadText}>{payload}</Text>
         </View>
       )}
+
     </ScrollView>
   );
 }

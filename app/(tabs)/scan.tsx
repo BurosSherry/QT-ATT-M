@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import AppButton from '@/components/AppButton';
 import { COLORS } from '@/constants/colors';
-import { STUDENT_ID } from '@/constants/student';
+import { useAuth } from '@/lib/auth';
 import { registerAttendance } from '@/lib/database';
 
 
@@ -43,7 +43,9 @@ export default function ScanScreen() {
   const handleBarcodeScanned = ({ data }: { data: string }) => {
     setScanned(true);
     setLastData(data);
-    registerAttendance(data, STUDENT_ID).then((result) => {
+    const { user } = useAuth();
+    const studentId = user?.id ?? 'unknown';
+    registerAttendance(data, studentId).then((result) => {
       setMessage(result.message);
       setSuccess(result.success);
     });
