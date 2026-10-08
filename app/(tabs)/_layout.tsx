@@ -78,6 +78,48 @@ export default function TabLayout() {
     ),
   }}
 />
+<Tabs.Screen
+  name="admin"
+  options={{
+    title: 'Admin',
+    tabBarIcon: ({ color, focused }) => (
+      <Ionicons
+        name={focused ? 'settings' : 'settings-outline'}
+        color={color}
+        size={24}
+      />
+    ),
+  }}
+/>
+<Tabs.Screen
+  name="events"
+  options={{
+    title: 'Events',
+    tabBarIcon: ({ color }) => (
+      <Ionicons name="calendar-outline" color={color} size={24} />
+    ),
+  }}
+/>
+
+<Tabs.Screen
+  name="attendance"
+  options={{
+    title: 'Records',
+    tabBarIcon: ({ color }) => (
+      <Ionicons name="document-text-outline" color={color} size={24} />
+    ),
+  }}
+/>
+
+<Tabs.Screen
+  name="summary"
+  options={{
+    title: 'Summary',
+    tabBarIcon: ({ color }) => (
+      <Ionicons name="stats-chart-outline" color={color} size={24} />
+    ),
+  }}
+/>
 
     </Tabs>
   );

@@ -132,10 +132,12 @@ export default function TeacherScreen() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
+      <View style={styles.formCard}>
       <Text style={styles.title}>Create Event QR</Text>
       <Text style={styles.subtitle}>
         Fill in the event details, then scan the generated QR with the Scan tab.
       </Text>
+      
 
       <Text style={styles.label}>Event Title</Text>
       <TextInput
@@ -213,7 +215,7 @@ export default function TeacherScreen() {
           <Text style={styles.payloadText}>{payload}</Text>
         </View>
       )}
-
+</View>
     </ScrollView>
   );
 }
@@ -240,122 +242,170 @@ function PickerField({ value, icon, onPress }: PickerFieldProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#FFF5F8',
   },
+
   content: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 40,
+  flexGrow: 1,
+  justifyContent: 'center',
+  paddingHorizontal: 20,
+  paddingBottom: 40,
   },
+
   title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
-    marginBottom: 4,
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FF5D8F',
+    textAlign: 'center',
+    marginBottom: 6,
   },
+
   subtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: '#A86A7D',
+    textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 16,
+    marginBottom: 20,
   },
+
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.textPrimary,
+    color: '#7A2942',
     marginBottom: 6,
-    marginTop: 10,
+    marginTop: 12,
   },
+
   input: {
-    backgroundColor: COLORS.card,
-    borderRadius: 14,
+    backgroundColor: '#FFF0F5',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#FFD4E1',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
-    color: COLORS.textPrimary,
+    color: '#7A2942',
   },
+
   pickerField: {
-    backgroundColor: COLORS.card,
-    borderRadius: 14,
+    backgroundColor: '#FFF0F5',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#FFD4E1',
     paddingHorizontal: 14,
     paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   pickerFieldPressed: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#FFE5EF',
   },
+
   pickerValue: {
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: COLORS.textPrimary,
+    color: '#7A2942',
     marginHorizontal: 10,
   },
+
   chipRow: {
     flexDirection: 'row',
-    marginTop: 8,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 10,
   },
+
   chip: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#FFE5EF',
     borderRadius: 999,
     paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingVertical: 8,
     marginRight: 8,
+    marginBottom: 8,
   },
+
   chipText: {
     fontSize: 13,
     fontWeight: '600',
-    color: COLORS.primary,
+    color: '#FF5D8F',
   },
+
   hint: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: '#A86A7D',
+    textAlign: 'center',
     marginTop: 6,
+    marginBottom: 12,
   },
+
   pickerContainer: {
     marginTop: 12,
     alignItems: 'center',
   },
+
   message: {
     fontSize: 14,
-    color: COLORS.primary,
+    color: '#FF5D8F',
     textAlign: 'center',
-    marginTop: 12,
+    marginVertical: 12,
+    fontWeight: '600',
   },
+
   resultCard: {
-    backgroundColor: COLORS.card,
-    borderRadius: 14,
-    padding: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#FFD4E1',
+    padding: 20,
     marginTop: 20,
     alignItems: 'center',
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
   },
+
   resultTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FF5D8F',
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
+
   qrBox: {
     backgroundColor: '#FFFFFF',
-    padding: 12,
-    borderRadius: 10,
+    padding: 15,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#FFD4E1',
     marginBottom: 12,
   },
+
   payloadText: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
+    fontSize: 11,
+    color: '#A86A7D',
     textAlign: 'center',
     lineHeight: 16,
   },
+  formCard: {
+  backgroundColor: '#FFFFFF',
+  borderRadius: 24,
+  padding: 20,
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 4,
+  },
+  shadowOpacity: 0.08,
+  shadowRadius: 8,
+  elevation: 4,
+},
 });
